@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Items for Sale</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #f7f5f0;
+    --surface: #ffffff;
+    --border: #e2ddd6;
+    --text: #1a1814;
+    --muted: #7a756c;
+    --accent: #2a2520;
+    --green: #3a6b4a;
+    --green-bg: #edf4ef;
+    --red: #8b3a3a;
+    --red-bg: #f7eded;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', system-ui, sans-serif;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-weight: 400;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Header ── */
+  header {
+    background: var(--accent);
+    color: #f7f5f0;
+    padding: 3rem 2rem 2.5rem;
+    text-align: center;
+  }
+
+  header h1 {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    margin-bottom: 0.5rem;
+  }
+
+  header p {
+    font-size: 0.9rem;
+    opacity: 0.6;
+    font-weight: 300;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* ── Filters ── */
+  .filter-bar {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    padding: 1.5rem 1rem;
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .filter-btn {
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    padding: 6px 18px;
+    font-family: var(--sans);
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted);
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .filter-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .filter-btn.active {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #f7f5f0;
+  }
+
+  /* ── Grid ── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+  }
+
+  /* ── Card ── */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+  }
+
+  .card.sold { opacity: 0.55; }
+  .card.sold:hover { transform: none; box-shadow: none; }
+
+  /* ── Gallery ── */
+  .gallery {
+    position: relative;
+    height: 220px;
+    background: var(--bg);
+    overflow: hidden;
+  }
+
+  .gallery img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.35s;
+  }
+
+  .gallery img.active { opacity: 1; }
+
+  .gallery-nav {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.85);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--accent);
+    transition: background 0.15s;
+    z-index: 2;
+  }
+
+  .gallery-nav:hover { background: white; }
+  .gallery-nav.prev { left: 10px; }
+  .gallery-nav.next { right: 10px; }
+
+  .gallery-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+    z-index: 2;
+  }
+
+  .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    transition: background 0.2s;
+  }
+
+  .dot.active { background: white; }
+
+  /* ── Card body ── */
+  .card-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+  }
+
+  .card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .card-title {
+    font-family: var(--serif);
+    font-size: 1.05rem;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--text);
+  }
+
+  .badge {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 3px 9px;
+    border-radius: 100px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .badge-available { background: var(--green-bg); color: var(--green); }
+  .badge-sold { background: var(--red-bg); color: var(--red); }
+
+  .product-id {
+    font-size: 0.72rem;
+    color: var(--muted);
+    font-family: monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .desc {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.65;
+    flex: 1;
+  }
+
+  .card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+    margin-top: 4px;
+  }
+
+  .price {
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    color: var(--text);
+  }
+
+  /* ── Empty state ── */
+  .empty {
+    grid-column: 1/-1;
+    text-align: center;
+    padding: 4rem;
+    color: var(--muted);
+    font-size: 0.9rem;
+  }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 2.5rem 1rem;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  footer p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 8px;
+  }
+
+  footer a {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    color: var(--text);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 2px;
+    transition: border-color 0.2s;
+  }
+
+  footer a:hover { border-color: var(--text); }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Items for Sale</h1>
+  <p>Second-hand &middot; Good condition &middot; Amsterdam</p>
+</header>
+
+<div class="filter-bar">
+  <button class="filter-btn active" onclick="filterProducts('all', event)">All</button>
+  <button class="filter-btn" onclick="filterProducts('available', event)">Available</button>
+  <button class="filter-btn" onclick="filterProducts('sold', event)">Sold</button>
+</div>
+
+<main class="grid" id="grid"></main>
+
+<footer>
+  <p>Interested in an item? Get in touch</p>
+  <a href="mailto:arinckokturk@gmail.com">arinckokturk@gmail.com</a>
+</footer>
+
+<script>
+// ─────────────────────────────────────────
+//  PRODUCTS — edit this list to add/update
+// ─────────────────────────────────────────
+const products = [
+  {
+    id: "PRD-001",
+    title: "Vintage wooden bookcase",
+    description: "Solid oak, 5-shelf vintage bookcase. Minor surface scratches but structurally sound. Dimensions: 80×30×180 cm.",
+    price: "€120",
+    status: "available", // "available" or "sold"
+    photos: [
+      "https://images.unsplash.com/photo-1594620302200-9a762244a156?w=600&q=80",
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80"
+    ]
+  },
+  {
+    id: "PRD-002",
+    title: "Nespresso coffee machine",
+    description: "Nespresso Vertuo Next, black. 1.5 years old, excellent condition. Original box and accessories included. 15 capsules thrown in.",
+    price: "€55",
+    status: "available",
+    photos: [
+      "https://images.unsplash.com/photo-1610889556528-9a770e32642f?w=600&q=80",
+      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80"
+    ]
+  },
+  {
+    id: "PRD-003",
+    title: "IKEA Poäng armchair",
+    description: "Mustard yellow fabric, birch frame. 2 years old, clean and sturdy. Easy to disassemble for transport.",
+    price: "€40",
+    status: "sold",
+    photos: [
+      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80"
+    ]
+  },
+  {
+    id: "PRD-004",
+    title: "Trek Marlin 5 bicycle",
+    description: "2021 model, XS frame (ideal for 155–165 cm). Shimano 21-speed, hydraulic brakes. New chain and front light. Lock and pannier bag included.",
+    price: "€280",
+    status: "available",
+    photos: [
+      "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&q=80",
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80"
+    ]
+  },
+  {
+    id: "PRD-005",
+    title: "Philips Hue starter kit",
+    description: "3× E27 colour bulbs + Bridge included. Supports white and full colour. Full app control. Complete in original box.",
+    price: "€70",
+    status: "available",
+    photos: [
+      "https://images.unsplash.com/photo-1558002038-1055907df827?w=600&q=80"
+    ]
+  },
+  {
+    id: "PRD-006",
+    title: "Patterned rug 160×230 cm",
+    description: "Geometric pattern, off-white and navy colour combination. Low pile, easy to clean. Slight fading but still looks great.",
+    price: "€35",
+    status: "sold",
+    photos: [
+      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80"
+    ]
+  }
+];
+
+// ─────────────────────────────────────────
+//  Rendering logic — no need to edit below
+// ─────────────────────────────────────────
+let currentFilter = 'all';
+const galleryState = {};
+
+function buildCard(p) {
+  const isSold = p.status === 'sold';
+  const imgs = p.photos.map((src, i) =>
+    `<img src="${src}" class="${i === 0 ? 'active' : ''}" alt="${p.title}" loading="lazy">`
+  ).join('');
+  const navs = p.photos.length > 1
+    ? `<button class="gallery-nav prev" onclick="shiftPhoto('${p.id}',-1)">&#8249;</button>
+       <button class="gallery-nav next" onclick="shiftPhoto('${p.id}',1)">&#8250;</button>`
+    : '';
+  const dots = p.photos.length > 1
+    ? `<div class="gallery-dots">${p.photos.map((_, i) =>
+        `<button class="dot ${i === 0 ? 'active' : ''}" onclick="goPhoto('${p.id}',${i})"></button>`
+      ).join('')}</div>`
+    : '';
+
+  return `
+  <article class="card ${isSold ? 'sold' : ''}">
+    <div class="gallery" id="gal-${p.id}">
+      ${imgs}${navs}${dots}
+    </div>
+    <div class="card-body">
+      <div class="card-top">
+        <h2 class="card-title">${p.title}</h2>
+        <span class="badge ${isSold ? 'badge-sold' : 'badge-available'}">${isSold ? 'Sold' : 'Available'}</span>
+      </div>
+      <span class="product-id">${p.id}</span>
+      <p class="desc">${p.description}</p>
+      <div class="card-footer">
+        <span class="price">${p.price}</span>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  const filtered = currentFilter === 'all'
+    ? products
+    : products.filter(p => p.status === currentFilter);
+  grid.innerHTML = filtered.length
+    ? filtered.map(buildCard).join('')
+    : '<p class="empty">No items in this category.</p>';
+}
+
+function filterProducts(f, e) {
+  currentFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  e.target.classList.add('active');
+  renderGrid();
+}
+
+function getImgs(id) { return document.querySelectorAll(`#gal-${id} img`); }
+function getDots(id) { return document.querySelectorAll(`#gal-${id} .dot`); }
+
+function goPhoto(id, idx) {
+  getImgs(id).forEach(i => i.classList.remove('active'));
+  getDots(id).forEach(d => d.classList.remove('active'));
+  const imgs = getImgs(id), dots = getDots(id);
+  if (imgs[idx]) imgs[idx].classList.add('active');
+  if (dots[idx]) dots[idx].classList.add('active');
+  galleryState[id] = idx;
+}
+
+function shiftPhoto(id, dir) {
+  const imgs = getImgs(id);
+  const next = ((galleryState[id] || 0) + dir + imgs.length) % imgs.length;
+  goPhoto(id, next);
+}
+
+renderGrid();
+</script>
+</body>
+</html>
