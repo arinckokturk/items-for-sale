@@ -139,8 +139,14 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     opacity: 0;
     transition: opacity 0.35s;
+  }
+
+  .gallery img.portrait {
+    object-fit: contain;
+    background: var(--bg);
   }
 
   .gallery img.active { opacity: 1; }
@@ -241,6 +247,7 @@
     color: var(--muted);
     line-height: 1.65;
     flex: 1;
+    white-space: pre-line;
   }
 
   .card-footer {
@@ -294,6 +301,60 @@
   }
 
   footer a:hover { border-color: var(--text); }
+
+  /* ── Lightbox ── */
+  #lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+  #lightbox.open { display: flex; }
+
+  #lightbox img {
+    max-width: 92vw;
+    max-height: 92vh;
+    object-fit: contain;
+    border-radius: 4px;
+  }
+
+  #lightbox-close {
+    position: fixed;
+    top: 1.2rem;
+    right: 1.4rem;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+  }
+  #lightbox-close:hover { opacity: 1; }
+
+  #lightbox-prev, #lightbox-next {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255,255,255,0.1);
+    border: none;
+    color: white;
+    font-size: 2.5rem;
+    line-height: 1;
+    padding: 0.6rem 1rem;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  #lightbox-prev:hover, #lightbox-next:hover { background: rgba(255,255,255,0.2); }
+  #lightbox-prev { left: 1rem; }
+  #lightbox-next { right: 1rem; }
+
+  .gallery { cursor: zoom-in; }
 </style>
 </head>
 <body>
@@ -311,9 +372,18 @@
 
 <main class="grid" id="grid"></main>
 
+<div id="lightbox">
+  <button id="lightbox-close" onclick="closeLightbox()">&#x2715;</button>
+  <button id="lightbox-prev" onclick="shiftLightbox(-1)">&#8249;</button>
+  <img id="lightbox-img" src="" alt="">
+  <button id="lightbox-next" onclick="shiftLightbox(1)">&#8250;</button>
+</div>
+
 <footer>
   <p>Interested in an item? Get in touch</p>
   <a href="mailto:arinckokturk@gmail.com">arinckokturk@gmail.com</a>
+  <br>
+  <a href="mailto:zulalates@gmail.com">zulalates@gmail.com</a>
 </footer>
 
 <script>
@@ -323,65 +393,16 @@
 const products = [
   {
     id: "PRD-001",
-    title: "Vintage wooden bookcase",
-    description: "Solid oak, 5-shelf vintage bookcase. Minor surface scratches but structurally sound. Dimensions: 80×30×180 cm.",
+    title: "IKEA TROTTEN - Desk sit/stand adjustable",
+    description: "In good condition\nBeige/white\n160×80 cm",
     price: "€120",
     status: "available", // "available" or "sold"
     photos: [
-      "https://images.unsplash.com/photo-1594620302200-9a762244a156?w=600&q=80",
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&q=80"
-    ]
-  },
-  {
-    id: "PRD-002",
-    title: "Nespresso coffee machine",
-    description: "Nespresso Vertuo Next, black. 1.5 years old, excellent condition. Original box and accessories included. 15 capsules thrown in.",
-    price: "€55",
-    status: "available",
-    photos: [
-      "https://images.unsplash.com/photo-1610889556528-9a770e32642f?w=600&q=80",
-      "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&q=80"
-    ]
-  },
-  {
-    id: "PRD-003",
-    title: "IKEA Poäng armchair",
-    description: "Mustard yellow fabric, birch frame. 2 years old, clean and sturdy. Easy to disassemble for transport.",
-    price: "€40",
-    status: "sold",
-    photos: [
-      "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&q=80"
-    ]
-  },
-  {
-    id: "PRD-004",
-    title: "Trek Marlin 5 bicycle",
-    description: "2021 model, XS frame (ideal for 155–165 cm). Shimano 21-speed, hydraulic brakes. New chain and front light. Lock and pannier bag included.",
-    price: "€280",
-    status: "available",
-    photos: [
-      "https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=600&q=80",
-      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80"
-    ]
-  },
-  {
-    id: "PRD-005",
-    title: "Philips Hue starter kit",
-    description: "3× E27 colour bulbs + Bridge included. Supports white and full colour. Full app control. Complete in original box.",
-    price: "€70",
-    status: "available",
-    photos: [
-      "https://images.unsplash.com/photo-1558002038-1055907df827?w=600&q=80"
-    ]
-  },
-  {
-    id: "PRD-006",
-    title: "Patterned rug 160×230 cm",
-    description: "Geometric pattern, off-white and navy colour combination. Low pile, easy to clean. Slight fading but still looks great.",
-    price: "€35",
-    status: "sold",
-    photos: [
-      "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=600&q=80"
+      "photos/PRD-001/IMG_5830 Large.jpeg",
+      "photos/PRD-001/IMG_5831 Large.jpeg",
+      "photos/PRD-001/IMG_5833 Large.jpeg",
+      "photos/PRD-001/IMG_5834 Large.jpeg",
+      "photos/PRD-001/IMG_5835 Large.jpeg"
     ]
   }
 ];
@@ -434,6 +455,25 @@ function renderGrid() {
   grid.innerHTML = filtered.length
     ? filtered.map(buildCard).join('')
     : '<p class="empty">No items in this category.</p>';
+
+  grid.querySelectorAll('.gallery').forEach(gallery => {
+    gallery.style.cursor = 'zoom-in';
+    gallery.addEventListener('click', e => {
+      if (e.target.closest('.gallery-nav')) return;
+      const activeImg = gallery.querySelector('img.active') || gallery.querySelector('img');
+      if (activeImg) openLightbox(activeImg);
+    });
+  });
+
+  grid.querySelectorAll('.gallery img').forEach(img => {
+    const apply = () => {
+      if (img.naturalHeight > img.naturalWidth) img.classList.add('portrait');
+      else img.classList.remove('portrait');
+    };
+    if (img.complete) apply();
+    else img.addEventListener('load', apply);
+
+  });
 }
 
 function filterProducts(f, e) {
@@ -460,6 +500,47 @@ function shiftPhoto(id, dir) {
   const next = ((galleryState[id] || 0) + dir + imgs.length) % imgs.length;
   goPhoto(id, next);
 }
+
+// ── Lightbox ──
+let lbPhotos = [], lbIndex = 0;
+
+function openLightbox(img) {
+  const gallery = img.closest('.gallery');
+  const allImgs = [...gallery.querySelectorAll('img')];
+  lbPhotos = allImgs.map(i => i.src);
+  lbIndex = allImgs.indexOf(img);
+  updateLightbox();
+  document.getElementById('lightbox').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeLightbox() {
+  document.getElementById('lightbox').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function shiftLightbox(dir) {
+  lbIndex = (lbIndex + dir + lbPhotos.length) % lbPhotos.length;
+  updateLightbox();
+}
+
+function updateLightbox() {
+  document.getElementById('lightbox-img').src = lbPhotos[lbIndex];
+  document.getElementById('lightbox-prev').style.display = lbPhotos.length > 1 ? '' : 'none';
+  document.getElementById('lightbox-next').style.display = lbPhotos.length > 1 ? '' : 'none';
+}
+
+document.getElementById('lightbox').addEventListener('click', e => {
+  if (e.target === e.currentTarget) closeLightbox();
+});
+
+document.addEventListener('keydown', e => {
+  const lb = document.getElementById('lightbox');
+  if (!lb.classList.contains('open')) return;
+  if (e.key === 'Escape') closeLightbox();
+  if (e.key === 'ArrowLeft') shiftLightbox(-1);
+  if (e.key === 'ArrowRight') shiftLightbox(1);
+});
 
 renderGrid();
 </script>
