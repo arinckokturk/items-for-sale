@@ -21,6 +21,8 @@
     --green-bg: #edf4ef;
     --red: #8b3a3a;
     --red-bg: #f7eded;
+    --orange: #8b5e2a;
+    --orange-bg: #fdf3e7;
     --serif: 'DM Serif Display', Georgia, serif;
     --sans: 'DM Sans', system-ui, sans-serif;
   }
@@ -234,6 +236,7 @@
 
   .badge-available { background: var(--green-bg); color: var(--green); }
   .badge-sold { background: var(--red-bg); color: var(--red); }
+  .badge-reserved { background: var(--orange-bg); color: var(--orange); }
 
   .product-id {
     font-size: 0.72rem;
@@ -367,6 +370,7 @@
 <div class="filter-bar">
   <button class="filter-btn active" onclick="filterProducts('all', event)">All</button>
   <button class="filter-btn" onclick="filterProducts('available', event)">Available</button>
+  <button class="filter-btn" onclick="filterProducts('reserved', event)">Reserved</button>
   <button class="filter-btn" onclick="filterProducts('sold', event)">Sold</button>
 </div>
 
@@ -396,13 +400,26 @@ const products = [
     title: "IKEA TROTTEN - Desk sit/stand adjustable",
     description: "In good condition\nBeige/white\n160×80 cm",
     price: "€120",
-    status: "available", // "available" or "sold"
+    status: "reserved",
     photos: [
       "photos/PRD-001/IMG_5830 Large.jpeg",
       "photos/PRD-001/IMG_5831 Large.jpeg",
       "photos/PRD-001/IMG_5833 Large.jpeg",
       "photos/PRD-001/IMG_5834 Large.jpeg",
       "photos/PRD-001/IMG_5835 Large.jpeg"
+    ]
+  },
+  {
+    id: "PRD-002",
+    title: "IKEA MILLBERGET - Chair",
+    description: "In good condition\nAdjustable\nColor: Murum black",
+    price: "€60",
+    status: "available",
+    photos: [
+      "photos/PRD-002/IMG_5836 Large.jpeg",
+      "photos/PRD-002/IMG_5837 Large.jpeg",
+      "photos/PRD-002/IMG_5838 Large.jpeg",
+      "photos/PRD-002/IMG_5839 Large.jpeg"
     ]
   }
 ];
@@ -436,7 +453,7 @@ function buildCard(p) {
     <div class="card-body">
       <div class="card-top">
         <h2 class="card-title">${p.title}</h2>
-        <span class="badge ${isSold ? 'badge-sold' : 'badge-available'}">${isSold ? 'Sold' : 'Available'}</span>
+        <span class="badge badge-${p.status}">${p.status.charAt(0).toUpperCase() + p.status.slice(1)}</span>
       </div>
       <span class="product-id">${p.id}</span>
       <p class="desc">${p.description}</p>
