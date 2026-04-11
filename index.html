@@ -328,13 +328,19 @@
     position: fixed;
     top: 1.2rem;
     right: 1.4rem;
-    background: none;
+    background: white;
     border: none;
-    color: white;
-    font-size: 2rem;
+    color: #1a1814;
+    font-size: 1.4rem;
     line-height: 1;
     cursor: pointer;
-    opacity: 0.7;
+    width: 2.2rem;
+    height: 2.2rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.85;
     transition: opacity 0.2s;
   }
   #lightbox-close:hover { opacity: 1; }
@@ -343,17 +349,18 @@
     position: fixed;
     top: 50%;
     transform: translateY(-50%);
-    background: rgba(255,255,255,0.1);
+    background: white;
     border: none;
-    color: white;
+    color: #1a1814;
     font-size: 2.5rem;
     line-height: 1;
-    padding: 0.6rem 1rem;
+    padding: 0.4rem 0.9rem;
     cursor: pointer;
     border-radius: 4px;
-    transition: background 0.2s;
+    opacity: 0.85;
+    transition: opacity 0.2s;
   }
-  #lightbox-prev:hover, #lightbox-next:hover { background: rgba(255,255,255,0.2); }
+  #lightbox-prev:hover, #lightbox-next:hover { opacity: 1; }
   #lightbox-prev { left: 1rem; }
   #lightbox-next { right: 1rem; }
 
@@ -398,7 +405,7 @@ const products = [
   {
     id: "PRD-001",
     title: "IKEA TROTTEN - Desk sit/stand adjustable",
-    description: "In good condition\nBeige/white\n160×80 cm",
+    description: "In good condition\nColor: Beige/white\nSize: 160×80 cm",
     price: "€120",
     status: "reserved",
     photos: [
@@ -470,7 +477,7 @@ function renderGrid() {
     ? products
     : products.filter(p => p.status === currentFilter);
   grid.innerHTML = filtered.length
-    ? filtered.map(buildCard).join('')
+    ? [...filtered].reverse().map(buildCard).join('')
     : '<p class="empty">No items in this category.</p>';
 
   grid.querySelectorAll('.gallery').forEach(gallery => {
