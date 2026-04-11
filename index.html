@@ -381,6 +381,8 @@
   <button class="filter-btn" onclick="filterProducts('sold', event)">Sold</button>
 </div>
 
+<p style="text-align:center; margin: 1rem 0 0; font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em;">Interested in an item? <a href="#contact" style="color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; text-decoration: underline;">Click here</a></p>
+
 <main class="grid" id="grid"></main>
 
 <div id="lightbox">
@@ -390,22 +392,28 @@
   <button id="lightbox-next" onclick="shiftLightbox(1)">&#8250;</button>
 </div>
 
-<footer>
+<footer id="contact">
   <p>Interested in an item? Get in touch</p>
   <a href="mailto:arinckokturk@gmail.com">arinckokturk@gmail.com</a>
   <br>
   <a href="mailto:zulalates@gmail.com">zulalates@gmail.com</a>
+  <p style="margin-top: 1.5rem;">Ready to buy? Pay via Tikkie - please include the <strong>item ID</strong> (e.g. PRD-000) as a reference note.</p>
+  <a href="https://tikkie.me/pay/h5fkua22n4phrvo53f9c" target="_blank" rel="noopener">Pay with Tikkie - Items for Sale (Arinc/Zulal)</a>
+  <div style="max-width: 500px; margin: 2rem auto 0;">
+    <p style="font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 1rem;">Want to listen to the <strong>Tikkie</strong> song? Here you go:</p>
+    <iframe data-testid="embed-iframe" style="border-radius:12px" src="https://open.spotify.com/embed/track/5COzSc1TnBtY0VNbcU2XE9?utm_source=generator" width="100%" height="352" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+  </div>
 </footer>
 
 <script>
 // ─────────────────────────────────────────
-//  PRODUCTS — edit this list to add/update
+//  PRODUCTS - edit this list to add/update
 // ─────────────────────────────────────────
 const products = [
   {
     id: "PRD-001",
     title: "IKEA TROTTEN - Desk sit/stand adjustable",
-    description: "In good condition\nColor: Beige/white\nSize: 160×80 cm",
+    description: "Adjustable working/office desk.\n\nCondition: Good\nColor: Beige/white\nSize: 160×80 cm",
     price: "€120",
     status: "reserved",
     photos: [
@@ -418,8 +426,8 @@ const products = [
   },
   {
     id: "PRD-002",
-    title: "IKEA MILLBERGET - Chair",
-    description: "In good condition\nAdjustable\nColor: Murum black",
+    title: "IKEA MILLBERGET - Chair adjustable",
+    description: "Adjustable working/office chair.\n\nCondition: Good\nColor: Murum black",
     price: "€60",
     status: "available",
     photos: [
@@ -432,7 +440,7 @@ const products = [
   {
     id: "PRD-003",
     title: "Large ZZ Plant (Zamioculcas) with Stylish Pot & Wooden Stand",
-    description: "Beautiful, healthy ZZ plant with strong, glossy green leaves. This is a low-maintenance plant, perfect for busy lifestyles or beginners—it thrives even in low to medium light and doesn't need frequent watering.\n\nComes with a modern neutral pot and a wooden stand, making it a great decorative piece for any living room, bedroom, or office.\n\n✔ Easy care\n✔ Air-purifying qualities\n✔ Perfect for modern interiors\n\nApprox. height: ~80–100 cm",
+    description: "Beautiful, healthy ZZ plant with strong, glossy green leaves. This is a low-maintenance plant, perfect for busy lifestyles or beginners-it thrives even in low to medium light and doesn't need frequent watering.\n\nComes with a modern neutral pot and a wooden stand, making it a great decorative piece for any living room, bedroom, or office.\n\n✔ Easy care\n✔ Air-purifying qualities\n✔ Perfect for modern interiors\n\nApprox. height: ~80-100 cm",
     price: "€85",
     status: "available",
     photos: [
@@ -456,7 +464,7 @@ const products = [
   },
   {
     id: "PRD-005",
-    title: "Stylish Wooden TV Unit with Rattan Doors – Scandinavian Design",
+    title: "Stylish Wooden TV Unit with Rattan Doors - Scandinavian Design",
     description: "Original MADE \"Pavia\" TV unit with oak-effect finish and rattan sliding doors. Minimal, modern design with practical storage.\n\nDimensions: 135 x 39 x 41 cm\nCondition: very good",
     price: "€180",
     status: "available",
@@ -468,7 +476,7 @@ const products = [
 ];
 
 // ─────────────────────────────────────────
-//  Rendering logic — no need to edit below
+//  Rendering logic - no need to edit below
 // ─────────────────────────────────────────
 let currentFilter = 'all';
 const galleryState = {};
@@ -498,7 +506,7 @@ function buildCard(p) {
         <h2 class="card-title">${p.title}</h2>
         <span class="badge badge-${p.status}">${p.status.charAt(0).toUpperCase() + p.status.slice(1)}</span>
       </div>
-      <span class="product-id">${p.id}</span>
+      <span class="product-id">ITEM ID: ${p.id}</span>
       <p class="desc">${p.description}</p>
       <div class="card-footer">
         <span class="price">${p.price}</span>
