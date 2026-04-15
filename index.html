@@ -276,6 +276,21 @@
     white-space: pre-line;
   }
 
+  .desc-link {
+    display: inline-block;
+    font-size: 0.82rem;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 1px;
+    transition: border-color 0.2s, color 0.2s;
+  }
+
+  .desc-link:hover {
+    border-color: var(--accent);
+    color: var(--text);
+  }
+
   .card-footer {
     display: flex;
     align-items: center;
@@ -798,6 +813,22 @@ const products = [
       "photos/PRD-008/IMG_5878 Large.jpeg",
       "photos/PRD-008/IMG_5880 Large.jpeg"
     ]
+  },
+  {
+    id: "PRD-999",
+    title: "Griseldestraat 36-1, 1055AZ, Amsterdam",
+    description: "Griseldestraat 36-1, a recently renovated two-bedroom flat with a smart layout in the popular Erasmuspark neighbourhood in Amsterdam-West.",
+    links: [
+    { url: "https://www.funda.nl/detail/koop/amsterdam/appartement-griseldestraat-36-1/89773451/", label: "View on Funda" },
+    { url: "https://www.cocqmakelaars.amsterdam/en-gb/residential-listings/sale/amsterdam/griseldestraat/36-1", label: "View on Cocq Makelaars" }
+    ],
+    price: "?",
+    status: "available",
+    photos: [
+      "photos/PRD-999/Griseldestraat 36 - 8 Large.jpeg",  
+      "photos/PRD-999/Griseldestraat 36 - 7 Large.jpeg",
+      "photos/PRD-999/Griseldestraat 36 - 9 Large.jpeg",
+    ]
   }
 ];
 
@@ -858,6 +889,8 @@ function buildCard(p) {
       </div>
       <span class="product-id">ITEM ID: ${p.id}</span>
       <p class="desc">${p.description}</p>
+      <br>
+      ${p.links && p.links.length ? p.links.map(l => `<a class="desc-link" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`).join('') : ''}
       ${buildBookList(p)}
       <div class="card-footer">
         <span class="price">${p.price}</span>
@@ -871,13 +904,15 @@ function renderGrid() {
   const filtered = currentFilter === 'all'
     ? products
     : products.filter(p => p.status === currentFilter);
+  const pinned = filtered.filter(p => p.id === 'PRD-999');
+  const rest = filtered.filter(p => p.id !== 'PRD-999');
   grid.innerHTML = filtered.length
-    ? [...filtered].sort((a, b) => {
+    ? [...pinned, ...rest.sort((a, b) => {
         if (currentSort === 'price-asc') return getPrice(a) - getPrice(b);
         if (currentSort === 'price-desc') return getPrice(b) - getPrice(a);
         if (currentSort === 'date-asc') return products.indexOf(a) - products.indexOf(b);
         return products.indexOf(b) - products.indexOf(a); // date-desc: newest first
-      }).map(buildCard).join('')
+      })].map(buildCard).join('')
     : '<p class="empty">No items in this category.</p>';
 
   grid.querySelectorAll('.gallery').forEach(gallery => {
