@@ -582,8 +582,8 @@
 
 <div class="filter-bar">
   <div class="filter-bar-row">
-    <button class="filter-btn active" onclick="filterProducts('all', event)">All</button>
-    <button class="filter-btn" onclick="filterProducts('available', event)">Available</button>
+    <button class="filter-btn" onclick="filterProducts('all', event)">All</button>
+    <button class="filter-btn active" onclick="filterProducts('available', event)">Available</button>
     <button class="filter-btn" onclick="filterProducts('reserved', event)">Reserved</button>
     <button class="filter-btn" onclick="filterProducts('sold', event)">Sold</button>
   </div>
@@ -696,7 +696,7 @@ const products = [
     id: "PRD-005",
     title: "Stylish Wooden TV Unit with Rattan Doors - Scandinavian Design",
     description: "Original MADE \"Pavia\" TV unit with oak-effect finish and rattan sliding doors. Minimal, modern design with practical storage.\n\nDimensions: 135 x 39 x 41 cm\nCondition: Very good",
-    price: "€180",
+    price: "€175",
     status: "available",
     photos: [
       "photos/PRD-005/IMG_6583 Large.jpeg",
@@ -831,7 +831,7 @@ const products = [
     id: "PRD-010",
     title: "iPhone 15 Pro 256GB Black Titanium - Excellent Condition - Battery 88%",
     description: "• Storage: 256GB\n• Color: Black Titanium\n• Battery Health: 88%\n• Manufactured: November 2023\n\nThe phone has been very well taken care of:\n\n• No scratches or dents\n• Always used with a case and screen protector\n• Fully functional, no issues\n\nWhat's included: 📦\n\n• iPhone 15 Pro\n• Original box\n• Charging cable",
-    price: "€610",
+    price: "€600",
     status: "available",
     photos: [
       "photos/PRD-010/IMG_5985 Large.jpeg",
@@ -852,21 +852,6 @@ const products = [
       "photos/PRD-011/IMG_6051 Large.jpeg",
       "photos/PRD-011/IMG_6055 Large.jpeg",
       "photos/PRD-011/IMG_6056 Large.jpeg"
-    ]
-  },
-  {
-    id: "PRD-012",
-    title: "IKEA PAX Wardrobes (3 units)",
-    description: "Three IKEA PAX wardrobes sold separately or as a set.\n\nColor: White\nCondition: Good\n\n① Unit 1  ·  €75\nFrame: 50×35×201 cm\n• 1× FORSAND door\n• 4× KOMPLEMENT shelf (35cm)\n\n② Unit 2  ·  €100\nFrame: 50×58×201 cm\n• 1× FORSAND door\n• 1× KOMPLEMENT shelf (58cm)\n• 2× KOMPLEMENT drawer\n• 1× KOMPLEMENT clothes rail\n\n③ Unit 3  ·  €90\nFrame: 50×58×201 cm\n• 1× GRIMO door\n• 3× KOMPLEMENT shelf (58cm)\n\nBundle option is available.",
-    links: [
-      { url: "https://www.ikea.com/nl/en/p/pax-wardrobe-frame-white-20458210/", label: "PAX Frame 35cm" },
-      { url: "https://www.ikea.com/nl/en/p/pax-wardrobe-frame-white-70458217/", label: "PAX Frame 58cm" }
-    ],
-    price: "€75 – €100",
-    status: "available",
-    photos: [
-      "photos/PRD-012/IMG_6067 Large.jpeg",
-      "photos/PRD-012/IMG_6065 Large.jpeg"
     ]
   },
   {
@@ -903,7 +888,7 @@ const products = [
     links: [
       { url: "https://www.ikea.com/nl/en/p/pax-wardrobe-frame-white-70458217/", label: "PAX Frame 58cm" }
     ],
-    price: "€100",
+    price: "€90",
     status: "available",
     photos: [
       "photos/PRD-015/IMG_6438 Large.jpeg",
@@ -919,10 +904,21 @@ const products = [
     links: [
       { url: "https://www.ikea.com/nl/en/p/pax-wardrobe-frame-white-70458217/", label: "PAX Frame 58cm" }
     ],
-    price: "€90",
+    price: "€80",
     status: "available",
     photos: [
       "photos/PRD-016/IMG_6065 Large.jpeg"
+    ]
+  },
+  {
+    id: "PRD-017",
+    title: "IKEA PAX Doors & Handles (2 sets)",
+    description: "Two complete door & handle sets for IKEA PAX wardrobes, sold together.\n\nEach set includes:\n• 1× FORSAND door, white (25×229 cm)\n• 1× GRIMO door, white (50×229 cm)\n• 1× BILLSBRO handle, white (2220 mm)\n\nCompatible with standard IKEA PAX frames.\n\nCondition: Good\nColor: White",
+    price: "€50",
+    status: "available",
+    photos: [
+      "photos/PRD-017/IMG_6615 Large.jpeg",
+      "photos/PRD-017/IMG_6610 Large.jpeg"
     ]
   }
 ];
@@ -930,7 +926,7 @@ const products = [
 // ─────────────────────────────────────────
 //  Rendering logic - no need to edit below
 // ─────────────────────────────────────────
-let currentFilter = 'all';
+let currentFilter = 'available';
 let currentSort = 'date-desc';
 
 function getPrice(p) {
